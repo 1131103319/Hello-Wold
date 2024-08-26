@@ -51,7 +51,7 @@ def index():  # put application's code here
     # return '<h1>Hello Totoro!</h1><img src="http://helloflask.com/totoro.gif">'
     user=User.query.first()
     movies=Movie.query.all()
-    return render_template('index.html',user=user,movies=movies)
+    return render_template('index.html',movies=movies)
 @app.route('/user/<name>')
 def user_page(name):
     return f'User:{name}'
@@ -62,6 +62,12 @@ def user_page(name):
 #     print(url_for("user_page", name='b'))
 #     print(url_for("test_url_for", num=2))
 #     return 'test page'
-
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+@app.context_processor
+def inject_user():
+    user=User.query.first()
+    return {'user':user}
 if __name__ == '__main__':
     app.run(debug=True)
